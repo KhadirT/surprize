@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mutlu Yıllar Gül'üm</title>
+<style>
+    .music-controls {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background-color: rgba(244, 143, 177, 0.9);
+        padding: 10px;
+        border-radius: 50px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        z-index: 1001;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+
+    .music-controls button {
+        background: none;
+        border: none;
+        color: white;
+        cursor: pointer;
+        font-size: 24px;
+        padding: 5px;
+        transition: transform 0.2s;
+    }
+
+    .music-controls button:hover {
+        transform: scale(1.1);
+    }
+
+    .music-controls .song-info {
+        color: white;
+        font-size: 14px;
+        margin: 0 10px;
+    }
+</style>
+
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #fce4ec;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 10px;
+        }
+
+        header {
+            text-align: center;
+            padding: 30px 10px;
+            background-color: #f48fb1;
+            color: white;
+            margin-bottom: 20px;
+            border-radius: 0 0 20px 20px;
+        }
+
+        h1 {
+            font-size: 2em;
+            margin-bottom: 15px;
+            padding: 0 10px;
+        }
+
+        @media (min-width: 768px) {
+            h1 {
+                font-size: 3em;
+            }
+        }
+
+        .photo-gallery {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        @media (min-width: 480px) {
+            .photo-gallery {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (min-width: 768px) {
+            .photo-gallery {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .photo-gallery {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        .photo-item {
+            background: white;
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .photo-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .photo-item img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+
+        .photo-item p {
+            margin-top: 8px;
+            text-align: center;
+            color: #666;
+            font-size: 0.9em;
+        }
+
+        .message-section {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+
+        .message-section h2 {
+            color: #e91e63;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+
+        .message-section p {
+            line-height: 1.6;
+            font-size: 1em;
+        }
+
+        .video-section {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+
+        .video-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+
+        @media (min-width: 768px) {
+            .video-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .section-title {
+            color: #e91e63;
+            text-align: center;
+            margin: 30px 0 15px 0;
+            font-size: 1.5em;
+        }
+
+        @media (min-width: 768px) {
+            .section-title {
+                font-size: 2em;
+            }
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px 10px;
+            background-color: #f48fb1;
+            color: white;
+            border-radius: 20px 20px 0 0;
+        }
+
+        .hearts {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1000;
+            overflow: hidden;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0) rotate(0deg); }
+            100% { transform: translateY(-100vh) rotate(360deg); }
+        }
+
+        .heart {
+            position: absolute;
+            color: #ff4081;
+            font-size: 20px;
+            animation: float 4s linear infinite;
+        }
+
+        /* Mobil için dokunmatik geliştirmeler */
+        @media (hover: none) {
+            .photo-item:hover {
+                transform: none;
+            }
+            
+            .photo-item:active {
+                transform: scale(0.98);
+            }
+        }
+
+        /* Yükleme animasyonu */
+        .loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #fce4ec;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 2000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal.show {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 1;
+        }
+
+        .modal-content {
+            max-width: 90%;
+            max-height: 90vh;
+            position: relative;
+            animation: zoomIn 0.3s ease;
+        }
+
+        @keyframes zoomIn {
+            from {
+                transform: scale(0.5);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .modal img, .modal video {
+            max-width: 100%;
+            max-height: 90vh;
+            object-fit: contain;
+            border-radius: 5px;
+        }
+
+        .modal-caption {
+            position: absolute;
+            bottom: -40px;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            color: white;
+            padding: 10px;
+            font-size: 1.2em;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: -40px;
+            right: 0;
+            color: white;
+            font-size: 30px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 5px;
+            z-index: 2001;
+        }
+
+        .close-modal:hover {
+            color: #f48fb1;
+        }
+
+        .photo-item img, .video-item video {
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .photo-item img:hover, .video-item video:hover {
+            transform: scale(1.05);
+        }
+
+        /* Mobil için ek düzenlemeler */
+        @media (max-width: 768px) {
+            .modal-content {
+                width: 95%;
+            }
+            
+            .close-modal {
+                top: -50px;
+                right: 10px;
+                font-size: 40px; /* Mobilde daha büyük tıklama alanı */
+                padding: 10px;
+            }
+        }
+
+
+        .loading .heart {
+            font-size: 50px;
+            position: static;
+            animation: pulse 1s infinite;
+        }
+    </style>
+</head>
+<body>
+    <audio id="backgroundMusic" loop>
+        <source src="music/song1.mp3" type="audio/mp3">
+    </audio>
+    
+    <div class="music-controls">
+        <button id="playPauseBtn">▶️</button>
+        <span class="song-info">Şarkı: <span id="currentSong">Şarkı 1</span></span>
+        <button id="nextBtn">⏭️</button>
+    </div>
+    
+    <div class="modal" id="mediaModal">
+        <div class="modal-content">
+            <button class="close-modal">&times;</button>
+            <div id="modalMedia"></div>
+            <div class="modal-caption"></div>
+        </div>
+    </div>
+
+    <div class="loading" id="loading">
+        <div class="heart">❤️</div>
+    </div>
+
+    <div class="hearts" id="hearts"></div>
+    
+    <header>
+        <h1>Nice Senelere Gül'üm ❤️</h1>
+        <p>Seninle geçirdiğim her an için minnettarım...</p>
+    </header>
+
+    <div class="container">
+        <section class="message-section">
+            <h2>Sevgilim</h2>
+            <p>
+                Sevgilim, bitanem, gülüm, her şeyim; Öncelikle bugün de dediğim gibi hayatıma girdiğin günden beri yaşantımın miladı(Senden Öncesi Ve Senden Sonrası) olabilirsin. Bu süreç boyunca senle ağlamayı-gülmeyi, tartışmayı-barışmayı gibi bir çok duyguyu zıttı ile tattık. Ne yaşarsak yaşayalım ikimiz de birbirimizden kopmadık bunun için ne kadar teşekkür etsem az. Benim için yaptığın fedakarlıkların ne kadar belli edemesem de farkındayım. İlklerini benim ile yaşadığın için minnettarım umarım nice ilklerimizi daha beraber yaşarız. Şuan bunları yazarken karşımda uyuyorsun tatlı tatlı :)(: Daha önce de dile getirdiğim gibi hislerimi ifade etmeye yetecek kelimeler bulamıyorum. Ama sanırım bu benim bilgisizliğimden ziyade herhangi bir dilde ifade edilebilecek türden bir sevgi olmaması. çünkü böyle sana bir şey olması ihtimalinin bile bende oluşturduğu korku ve endişe bile bunu ufacık bir kısmını anlatmaya anca yetiyor. Daha önce demiştim ya serçenin gözyaşı kadar değerlisin benim için öyle işte. Buralara gelene kadar çok kez düştük kalktık belki ama umarım bundan sonrası da olabildiğince kusursuz geçer.Yola ta en başından "Razıysan Gel" diye başladık şimdi "Dilerim Ki" olarak devam ediyoruz. umarım bunun sonu "Evli, mutlu, çocuklu" olarak biter. Yeni yaşın mutlu huzurlu ve sevdiklerinle geçsin seni çok seviyorum ve iyi ki varsın. Cidden tüm kalbimle söylüyorum. umarım yüzün hep güler. Bir yaş daha yaşlandın aynı yaşta da değiliz artık:/ istersen saygıdan teyze diyebilirim :)) Anılarımızdan Birkaçını böyle sergilemek istedim. alacağım hediyeyi evinde barındıramayacağına istediğin zaman dilediğin gibi bakabil diye:) Ayıcığımı da almayı unutma çok özlemiş seni zaten kardeşi de benimle. Umarım gözyaşın sadece mutluluktan akar. Son bir şarkı alıntısı ile bitireyim. "Güneşli Günler Göreceğiz".
+            </p>
+        </section>
+
+        <h2 class="section-title">Birlikte Yaşadığımız Güzel Anılardan Bazıları</h2>
+        <section class="photo-gallery">
+            <div class="photo-item">
+                <img src="images/ilkfoto.jpg" alt="Fotoğraf 1" loading="lazy">
+                <p>İlk Fotoğrafımız</p>
+            </div>
+            <div class="photo-item">
+                <img src="images/sweat.jpg" alt="Fotoğraf 2" loading="lazy">
+                <p>İlk Couple-Sweatlerimiz</p>
+            </div>
+            <div class="photo-item">
+                <img src="images/uyku.jpg" alt="Fotoğraf 3" loading="lazy">
+                <p>Mışıl Mışıl Uyurken</p>
+            </div>
+            <div class="photo-item">
+                <img src="images/piknik.jpg" alt="Fotoğraf 4" loading="lazy">
+                <p>Piknik günümüz</p>
+            </div>
+            <div class="photo-item">
+                <img src="images/nargile.jpg" alt="Fotoğraf 5" loading="lazy">
+                <p>Kafede nargile</p>
+            </div>
+            <div class="photo-item">
+                <img src="images/kucukluk.jpg" alt="Fotoğraf 6" loading="lazy">
+                <p>Küçüklükler</p>
+            </div>
+            <div class="photo-item">
+                <img src="images/masal.jpg" alt="Fotoğraf 7" loading="lazy">
+                <p>Masal Şatosu</p>
+            </div>
+            <div class="photo-item">
+                <img src="images/masal_selfie.jpg" alt="Fotoğraf 8" loading="lazy">
+                <p>Şato Önü Selfie</p>
+            </div>
+            <div class="photo-item">
+                <img src="images/dedektif.jpg" alt="Fotoğraf 9" loading="lazy">
+                <p>Dedektiflik</p>
+            </div>
+            <div class="photo-item">
+                <img src="images/sinema.jpg" alt="Fotoğraf 10" loading="lazy">
+                <p>Sinema</p>
+            </div>
+            <div class="photo-item">
+                <img src="images/kahvalti.jpg" alt="Fotoğraf 11" loading="lazy">
+                <p>Mekanda İlk Kahvaltımız</p>
+            </div>
+            <div class="photo-item">
+                <img src="images/bowling.jpg" alt="Fotoğraf 12" loading="lazy">
+                <p>Bowling</p>
+            </div>
+            <div class="photo-item">
+                <img src="images/bowling2.jpg" alt="Fotoğraf 13" loading="lazy">
+                <p>Bowling Sonucu :></p>
+            </div>
+            <div class="photo-item">
+                <img src="images/akim.jpg" alt="Fotoğraf 14" loading="lazy">
+                <p>İlk Akımımız</p>
+            </div>
+            <div class="photo-item">
+                <img src="images/konser.jpg" alt="Fotoğraf 15" loading="lazy">
+                <p>Konser Anımız</p>
+            </div>
+            <div class="photo-item">
+                <img src="images/ayicik.jpg" alt="Fotoğraf 16" loading="lazy">
+                <p>Oğlunla Tek Foton :/ </p>
+            </div>
+            <div class="photo-item">
+                <img src="images/bileklik.jpg" alt="Fotoğraf 17" loading="lazy">
+                <p>Bilekliğimiz</p>
+            </div>
+        </section>
+
+        <h2 class="section-title">Özel Videolarımız</h2>
+        <section class="video-section">
+            <div class="video-grid">
+                <div class="video-item">
+                    <video width="75%" controls>
+                        <source src="videos/sinema.mp4" type="video/mp4">
+                        Tarayıcınız video elementini desteklemiyor.
+                    </video>
+                    <p>Sinema</p>
+                </div>
+                <div class="video-item">
+                    <video width="60%" controls>
+                        <source src="videos/edit.mp4" type="video/mp4">
+                        Tarayıcınız video elementini desteklemiyor.
+                    </video>
+                    <p>Doğum günü sürprizin</p>
+                </div>
+                <div class="video-item">
+                    <video width="100%" controls>
+                        <source src="videos/dilerim-ki.mp4" type="video/mp4">
+                        Tarayıcınız video elementini desteklemiyor.
+                    </video>
+                    <p>Dilerim Ki</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <p>Seni Çok Seviyorum! ❤️</p>
+    </footer>
+    <!-- Body taginin sonuna eklenecek JavaScript -->
+<script>
+    // Şarkı listesi
+    const songs = [
+        { src: 'music/ate.mp3', name: 'Diğer Yarım' },
+        { src: 'music/dgko.mp3', name: 'Sevgilim İyi Ki Doğdun' },
+        { src: 'music/dilerimki.mp3', name: 'Şarkımız' },
+        { src: 'music/ily.mp3', name: 'Seni Seviyorum' },
+        { src: 'music/olmazlarainat.mp3', name: 'Olmazlara İnat' },
+        { src: 'music/sadeceark.mp3', name: 'Özgün-Sadece Arkadaşız' },
+        { src: 'music/zehir.mp3', name: 'Zehir' },
+        { src: 'music/razıysangel.mp3', name: 'Razıysan Gel' }
+        // İstediğiniz kadar şarkı ekleyebilirsiniz
+    ];
+
+    let currentSongIndex = 0;
+    const audio = document.getElementById('backgroundMusic');
+    const playPauseBtn = document.getElementById('playPauseBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const songInfoSpan = document.getElementById('currentSong');
+    let isPlaying = false;
+
+    // Sayfa yüklendiğinde müziği otomatik başlatma
+    document.addEventListener('DOMContentLoaded', () => {
+        // Birçok tarayıcı otomatik oynatmayı engeller, bu yüzden kullanıcı etkileşimi gerekebilir
+        audio.volume = 0.5; // Varsayılan ses seviyesi
+    });
+
+    // Oynat/Duraklat butonu işlevi
+    playPauseBtn.addEventListener('click', () => {
+        if (isPlaying) {
+            audio.pause();
+            playPauseBtn.textContent = '▶️';
+        } else {
+            audio.play();
+            playPauseBtn.textContent = '⏸️';
+        }
+        isPlaying = !isPlaying;
+    });
+
+    // Sonraki şarkı butonu işlevi
+    nextBtn.addEventListener('click', () => {
+        currentSongIndex = (currentSongIndex + 1) % songs.length;
+        changeSong();
+    });
+
+    // Şarkı değiştirme fonksiyonu
+    function changeSong() {
+        const currentSong = songs[currentSongIndex];
+        audio.src = currentSong.src;
+        songInfoSpan.textContent = currentSong.name;
+        
+        if (isPlaying) {
+            audio.play();
+        }
+    }
+
+    // Video oynatıldığında müziği duraklat
+    document.querySelectorAll('video').forEach(video => {
+        video.addEventListener('play', () => {
+            if (isPlaying) {
+                audio.pause();
+                playPauseBtn.textContent = '▶️';
+                isPlaying = false;
+            }
+        });
+        
+        video.addEventListener('pause', () => {
+            // Video durduğunda müziği otomatik başlatmak isterseniz bu kısmı aktif edebilirsiniz
+            /*
+            if (!isPlaying) {
+                audio.play();
+                playPauseBtn.textContent = '⏸️';
+                isPlaying = true;
+            }
+            */
+        });
+    });
+
+    // Modalı kapatınca müziği tekrar başlat
+    function closeModal() {
+        modal.classList.remove('show');
+        modalMedia.innerHTML = '';
+        document.body.style.overflow = 'auto';
+        
+        // Video modalı kapatıldığında müziği otomatik başlatmak isterseniz bu kısmı aktif edebilirsiniz
+        if (!isPlaying) {
+            audio.play();
+            playPauseBtn.textContent = '⏸️';
+            isPlaying = true;
+        }
+    }
+</script>
+
+
+    <script>
+        // Yükleme ekranını kaldır
+        window.addEventListener('load', function() {
+            document.getElementById('loading').style.display = 'none';
+        });
+
+        // Kalp animasyonu
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.className = 'heart';
+            heart.innerHTML = '❤️';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.animationDuration = Math.random() * 3 + 2 + 's';
+            document.getElementById('hearts').appendChild(heart);
+            
+            setTimeout(() => {
+                heart.remove();
+            }, 5000);
+        }
+
+        // Mobil cihazlarda daha az kalp oluştur
+        const isMobile = window.innerWidth <= 768;
+        const heartInterval = isMobile ? 1000 : 300;
+        setInterval(createHeart, heartInterval);
+
+        // Resimleri tıklandığında büyütme özelliği
+        document.querySelectorAll('.photo-item img').forEach(img => {
+            img.addEventListener('click', function() {
+                this.classList.toggle('enlarged');
+            });
+        });
+        // Modal işlemleri için JavaScript
+        const modal = document.getElementById('mediaModal');
+        const modalMedia = document.getElementById('modalMedia');
+        const modalCaption = document.querySelector('.modal-caption');
+
+        // Fotoğraflar için tıklama olayı
+        document.querySelectorAll('.photo-item img').forEach(img => {
+            img.addEventListener('click', function() {
+                openModal(this.src, this.nextElementSibling.textContent, 'image');
+            });
+        });
+
+        // Videolar için tıklama olayı
+        document.querySelectorAll('.video-item video').forEach(video => {
+            video.addEventListener('click', function() {
+                openModal(this.querySelector('source').src, this.nextElementSibling.textContent, 'video');
+            });
+        });
+
+        function openModal(src, caption, type) {
+            modal.classList.add('show');
+            modalCaption.textContent = caption;
+            
+            if (type === 'image') {
+                modalMedia.innerHTML = `<img src="${src}" alt="${caption}">`;
+            } else {
+                modalMedia.innerHTML = `
+                    <video controls autoplay>
+                        <source src="${src}" type="video/mp4">
+                    </video>`;
+            }
+
+            // Scroll'u engelle
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Modalı kapatma fonksiyonu
+        function closeModal() {
+            modal.classList.remove('show');
+            modalMedia.innerHTML = '';
+            document.body.style.overflow = 'auto';
+        }
+
+        // Çarpıya tıklayınca kapat
+        document.querySelector('.close-modal').addEventListener('click', closeModal);
+
+        // Modal dışına tıklayınca kapat
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+
+        // ESC tuşu ile kapatma
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+        });
+
+        // Dokunmatik cihazlar için swipe ile kapatma
+        let touchstartY = 0;
+        let touchendY = 0;
+
+        modal.addEventListener('touchstart', function(e) {
+            touchstartY = e.changedTouches[0].screenY;
+        });
+
+        modal.addEventListener('touchend', function(e) {
+            touchendY = e.changedTouches[0].screenY;
+            if (touchendY - touchstartY > 50) { // Aşağı kaydırma
+                closeModal();
+            }
+        });
+        
+
+    </script>
+</body>
+</html>
